@@ -214,16 +214,3 @@ def dale_chall_readability_score(self, text):
 	if diff_words > 5:
 		raw_score += 3.6365
 	return legacy_round(score, 2)
-
-def getFeatureArray(tweets):
-	features = []
-	sentiment_analyzer = vader()
-	for t in tweets:
-		t = preprocess(t).lower()
-		FRE = flesch_reading_ease(t)
-		no_of_difficult_words = difficult_words(t)
-		dale_chall_readability = dale_chall_readability_score(t)
-		t = tokenizer(t)
-		sentiment = sentiment_analyzer.polarity_scores(t)
-		no_of_words = len(t)
-		features.append(sentiment, FRE, dale_chall_readability, no_of_words, no_of_difficult_words)
