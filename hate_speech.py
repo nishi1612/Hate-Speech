@@ -188,3 +188,42 @@ def smog_index(text):
 		return legacy_round(SMOG, 1)
 	else:
 		return 0
+
+def dale_chall_readability_score(self, text):
+	"""
+        Implements Dale Challe Formula:
+        Raw score = 0.1579*(PDW) + 0.0496*(ASL) + 3.6365
+        Here,
+            PDW = Percentage of difficult words.
+            ASL = Average sentence length
+	"""
+	words = word_count(text)
+    # Number of words not termed as difficult words
+	count = word_count - difficult_words(text)
+	if words > 0:
+        # Percentage of words not on difficult word list
+		per = float(count) / float(words) * 100
+    # diff_words stores percentage of difficult words
+	diff_words = 100 - per
+	raw_score = (0.1579 * diff_words) + (0.0496 * avg_sentence_length(text))
+
+    # If Percentage of Difficult Words is greater than 5 %, then;
+    # Adjusted Score = Raw Score + 3.6365,
+    # otherwise Adjusted Score = Raw Score
+
+	if diff_words > 5:
+		raw_score += 3.6365
+	return legacy_round(score, 2)
+
+def getFeatureArray(tweets):
+	features = []
+	sentiment_analyzer = vader()
+	for t in tweets:
+		t = preprocess(t).lower()
+		FRE = flesch_reading_ease(t)
+		no_of_difficult_words = difficult_words(t)
+		dale_chall_readability = dale_chall_readability_score(t)
+		t = tokenizer(t)
+		sentiment = sentiment_analyzer.polarity_scores(t)
+		no_of_words = len(t)
+		features.append(sentiment, FRE, dale_chall_readability, no_of_words, no_of_difficult_words)
