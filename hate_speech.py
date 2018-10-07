@@ -63,3 +63,26 @@ def pos_tweet(tweet):
 		print(total_pos_tags)
 
 pos_tweet(hate_speech_data['tweet'])
+
+'''Features will be readability scores, sentiments, no of words
+
+Extra features to try no of syllables, no of characters
+For improvement of model, we can use semantic features and remove hashtags properly
+Also, later try LSTM, RNN
+Now use Decision Tree
+
+'''
+
+
+def break_sentences(text):
+	nlp = spacy.load('en')
+	doc = nlp(text)
+	return doc.sents
+
+# Returns Number of Words in the text
+def word_count(text):
+	sentences = break_sentences(text)
+	words = 0
+	for sentence in sentences:
+		words += len([token for token in sentence])
+	return words 
