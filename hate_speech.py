@@ -134,3 +134,57 @@ def difficult_words(text):
 			diff_words_set.add(word)
 
 	return len(diff_words_set)
+
+
+# A word is polysyllablic if it has more than 3 syllables
+# this functions returns the number of all such words
+# present in the text
+def poly_syllable_count(text):
+	count = 0
+	words = []
+	sentences = break_sentences(text)
+	for sentence in sentences:
+		words += [token for token in sentence]
+
+
+	for word in words:
+		syllable_count = syllables_count(word)
+		if syllable_count >= 3:
+			count += 1
+	return count
+
+
+def flesch_reading_ease(text):
+	"""
+	Implements Flesch Formula:
+	Reading Ease score = 206.835 - (1.015 × ASL) - (84.6 × ASW)
+	Here,
+		ASL = average sentence length (number of words
+	        divided by number of sentences)
+		ASW = average word length in syllables (number of syllables
+	        divided by number of words)
+	"""
+	FRE = 206.835 - float(1.015 * avg_sentence_length(text)) - float(84.6 * avg_syllables_per_word(text))
+	return legacy_round(FRE, 2)
+
+
+def gunning_fog(text):
+	per_diff_words = (difficult_words(text) / word_count(text) * 100) + 5
+	grade = 0.4 * (avg_sentence_length(text) + per_diff_words)
+	return grade
+
+
+def smog_index(text):
+	"""
+        Implements SMOG Formula / Grading
+        SMOG grading = 3 + ?polysyllable count.
+        Here,
+           polysyllable count = number of words of more
+          than two syllables in a sample of 30 sentences.
+	"""
+	if sentence_count(text) >= 3:
+		poly_syllab = poly_syllable_count(text)
+		SMOG = (1.043 * (30*(poly_syllab / sentence_count(text)))**0.5) + 3.1291
+		return legacy_round(SMOG, 1)
+	else:
+		return 0
