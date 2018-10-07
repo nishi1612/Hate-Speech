@@ -85,4 +85,16 @@ def word_count(text):
 	words = 0
 	for sentence in sentences:
 		words += len([token for token in sentence])
-	return words 
+	return words
+
+# Returns the number of sentences in the text
+def sentence_count(text):
+	sentences = break_sentences(text)
+	return len(sentences)
+
+# Returns average sentence length
+def avg_sentence_length(self, text):
+	words = word_count(text)
+	sentences = sentence_count(text)
+	average_sentence_length = float(words / sentences)
+	return average_sentence_length 
